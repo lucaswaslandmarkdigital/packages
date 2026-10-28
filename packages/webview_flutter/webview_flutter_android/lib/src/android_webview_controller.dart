@@ -1570,15 +1570,17 @@ class AndroidNavigationDelegate extends PlatformNavigationDelegate {
           },
       requestLoading:
           (_, android_webview.WebView webView, android_webview.WebResourceRequest request) {
-            weakThis.target?._handleNavigation(
-              request.url,
-              headers:
-                  request.requestHeaders?.map<String, String>((String? key, String? value) {
-                    return MapEntry<String, String>(key!, value!);
-                  }) ??
-                  <String, String>{},
-              isForMainFrame: request.isForMainFrame,
-            );
+            if (!request.isRedirect) {
+              weakThis.target?._handleNavigation(
+                request.url,
+                headers:
+                    request.requestHeaders?.map<String, String>((String? key, String? value) {
+                      return MapEntry<String, String>(key!, value!);
+                    }) ??
+                    <String, String>{},
+                isForMainFrame: request.isForMainFrame,
+              );
+            }
           },
       urlLoading: (_, android_webview.WebView webView, String url) {
         weakThis.target?._handleNavigation(url, isForMainFrame: true);

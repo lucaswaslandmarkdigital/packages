@@ -1202,6 +1202,9 @@ class WebKitNavigationDelegate extends PlatformNavigationDelegate {
       },
       decidePolicyForNavigationAction: (_, _, WKNavigationAction action) async {
         if (weakThis.target?._onNavigationRequest != null) {
+          if (action.navigationType != NavigationType.linkActivated) {
+            return NavigationActionPolicy.allow;
+          }
           final NavigationDecision decision = await weakThis.target!._onNavigationRequest!(
             NavigationRequest(
               url: await action.request.getUrl() ?? '',
